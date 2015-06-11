@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('orongoApp')
-  .controller('WordsCtrl', function ($scope, pouchDB, WordsService) {
+  .controller('WordsCtrl', function ($scope, pouchDB, WordsService, ngToast) {
 
     $scope.consecutiveSuccessesWins = 5;
 
@@ -13,10 +13,10 @@ angular.module('orongoApp')
 
     $scope.saveWord = function() {
       WordsService.save($scope.word).then(function () {
-        console.log('Saved ' + $scope.word._id);
+        ngToast.create('Word ' + $scope.word._id + ' added.');
         $scope.words.push($scope.word);
-      }).catch(function (err) {
-        console.error(err);
+      }).catch(function () {
+        ngToast.danger('Something\'s wrong. Try again.');
       });
     };
 
@@ -31,7 +31,7 @@ angular.module('orongoApp')
 
     WordsService.findAll().then(function(result) {
       $scope.words = result.rows.map(function(elem) { return elem.doc; });
-    }).catch(function(err) {
-      console.log('Something failed ' + err);
+    }).catch(function() {
+      ngToast.danger('Something\'s wrong. Try again.');
     });
   });

@@ -4,7 +4,8 @@ angular
   .module('orongoApp', [
     'ngResource',
     'ngRoute',
-    'pouchdb'
+    'pouchdb',
+    'ngToast'
   ])
   .run(function(WordsService) {
     WordsService.scheduleSync();
