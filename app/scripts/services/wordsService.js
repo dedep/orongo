@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('orongoApp')
-  .service('WordsService', function (pouchDB) {
+  .service('WordsService', function (pouchDB, DBConfig) {
 
     var localDB = pouchDB('orongo2');
-    var remoteDB = pouchDB('http://localhost:5984/orongo2'); //todo: do stałej
+    var remoteDB = pouchDB(DBConfig.url);
 
     this.scheduleSync = function() {
       localDB.sync(remoteDB, {

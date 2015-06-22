@@ -12,6 +12,8 @@ module.exports = function (grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
+  grunt.loadNpmTasks('grunt-manifest-generator');
+
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
@@ -24,6 +26,21 @@ module.exports = function (grunt) {
   // Define the configuration for all the tasks
   grunt.initConfig({
 
+    manifestGenerator: {
+      test: {
+        options: {
+          includeHTML: true,
+          includeHtmlImage: true,
+          includeCSS: true,
+          includeCssImage: true,
+          includeJS: true
+        },
+        files: {
+          'app/manifest.appcache': ['app/index.html']
+        }
+      }
+    },
+
     // Project settings
     yeoman: appConfig,
 
@@ -35,7 +52,7 @@ module.exports = function (grunt) {
       },
       js: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
+        tasks: ['newer:jshint:all', 'manifestGenerator:test'],
         options: {
           livereload: '<%= connect.options.livereload %>'
         }
@@ -46,7 +63,7 @@ module.exports = function (grunt) {
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'autoprefixer']
+        tasks: ['newer:copy:styles', 'autoprefixer', 'manifestGenerator:test']
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -68,7 +85,7 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
+        hostname: '0.0.0.0',
         livereload: 35729
       },
       livereload: {
@@ -362,6 +379,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'manifestGenerator:test',
       'wiredep',
       'concurrent:server',
       'autoprefixer',
@@ -377,6 +395,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
+    'manifestGenerator:test',
     'concurrent:test',
     'autoprefixer',
     'connect:test',
@@ -385,6 +404,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'manifestGenerator:test',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

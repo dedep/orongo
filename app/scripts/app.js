@@ -10,6 +10,9 @@ angular
   .run(function(WordsService) {
     WordsService.scheduleSync();
   })
+  .constant('DBConfig', {
+    url: 'http://localhost:5984/orongo2'
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/words', {
