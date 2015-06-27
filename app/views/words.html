@@ -3,7 +3,7 @@
 
     <div class="form-group">
       <label for="word">Word (EN)</label>
-      <input type="text" id="word" ng-model="word._id" class="form-control" placeholder="Enter word">
+      <input type="text" id="word" ng-model="word.value" class="form-control" placeholder="Enter word">
     </div>
 
     <div class="form-group">
@@ -24,7 +24,7 @@
       </tr>
       <tr ng-repeat="word in words" ng-class="word.consecutiveSuccesses == consecutiveSuccessesWins ? 'success ' : ''">
         <td>{{$index + 1}}</td>
-        <td>{{word._id}}</td>
+        <td>{{word.value}}</td>
         <td>{{word.translation}}</td>
         <td>
           <span ng-repeat="a in range(word.consecutiveSuccesses + 0) track by $index" class="glyphicon glyphicon-star">

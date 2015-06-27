@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('orongoApp')
-  .service('WordsService', function (pouchDB, DBConfig) {
+  .service('WordsService', function (pouchDB, DBConfig, $rootScope) {
 
     var localDB = pouchDB('orongo2');
     var remoteDB = pouchDB(DBConfig.url);
@@ -10,16 +10,15 @@ angular.module('orongoApp')
       localDB.sync(remoteDB, {
         live: true,
         retry: true
-      }).on('change', function () {
-        //findAll();
+      }).on('change', function (c) {
+        if (c.direction === 'pull') {
+          $rootScope.$broadcast('server_pull', c);
+        }
       }).on('paused', function () {
-        console.log('paused');
         // replication was paused, usually because of a lost connection
       }).on('active', function () {
-        console.log('active');
         // replication was resumed
       }).on('error', function () {
-        console.log('err');
         // totally unhandled error (shouldn't happen)
       });
     };

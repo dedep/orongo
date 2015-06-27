@@ -36,7 +36,7 @@ module.exports = function (grunt) {
           includeJS: true
         },
         files: {
-          'app/manifest.appcache': ['app/index.html']
+          'app/manifest.appcache': ['app/{,*/}*.html']
         }
       }
     },

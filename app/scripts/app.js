@@ -5,13 +5,14 @@ angular
     'ngResource',
     'ngRoute',
     'pouchdb',
-    'ngToast'
+    'ngToast',
+    'uuid4'
   ])
   .run(function(WordsService) {
     WordsService.scheduleSync();
   })
   .constant('DBConfig', {
-    url: 'http://localhost:5984/orongo2'
+    url: 'http://192.168.1.10:5984/orongo3'
   })
   .config(function ($routeProvider) {
     $routeProvider

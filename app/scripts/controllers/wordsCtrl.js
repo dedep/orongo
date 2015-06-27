@@ -1,21 +1,35 @@
 'use strict';
 
 angular.module('orongoApp')
-  .controller('WordsCtrl', function ($scope, pouchDB, WordsService, ngToast) {
+  .controller('WordsCtrl', function ($scope, pouchDB, WordsService, ngToast, uuid4) {
 
     $scope.consecutiveSuccessesWins = 5;
 
     $scope.word = {
-      _id: '',
+      value: '',
       translation: '',
       consecutiveSuccesses: 0
     };
 
+    $scope.$on('server_pull', function(e, w) {
+      var changedDocs = w.change.docs;
+      _.each(changedDocs, function(doc) {
+        $scope.words = _.reject($scope.words, function(word) { return word._id === doc._id; });
+
+        if (!doc._deleted) {
+          $scope.words.push(doc);
+        }
+      });
+    });
+
     $scope.saveWord = function() {
+      $scope.word._id = uuid4.generate();
+
       WordsService.save($scope.word).then(function () {
-        ngToast.create('Word ' + $scope.word._id + ' added.');
-        $scope.words.push($scope.word);
-      }).catch(function () {
+        $scope.words.push(_.clone($scope.word));
+        ngToast.create('Word ' + $scope.word.value + ' added.');
+      }).catch(function (e) {
+        console.log(e);
         ngToast.danger('Something\'s wrong. Try again.');
       });
     };
