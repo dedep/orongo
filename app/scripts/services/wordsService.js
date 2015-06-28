@@ -2,11 +2,10 @@
 
 angular.module('orongoApp')
   .service('WordsService', function (pouchDB, DBConfig, $rootScope) {
+    var localDB = pouchDB('orongo3');
 
-    var localDB = pouchDB('orongo2');
-    var remoteDB = pouchDB(DBConfig.url);
-
-    this.scheduleSync = function() {
+    this.scheduleSync = function(url) {
+      var remoteDB = pouchDB(url);
       localDB.sync(remoteDB, {
         live: true,
         retry: true
