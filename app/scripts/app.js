@@ -5,8 +5,9 @@ angular
     'ngResource',
     'ngRoute',
     'pouchdb',
-    'ngToast',
-    'uuid4'
+    'uuid4',
+    'LocalStorageModule',
+    'ngToast'
   ])
   .run(function() {
     String.prototype.hexEncode = function() {
@@ -30,7 +31,8 @@ angular
     $routeProvider
       .when('/words', {
         templateUrl: 'views/words.html',
-        controller: 'WordsCtrl'
+        controller: 'WordsCtrl',
+        activetab: 'words'
       })
       .when('/words/:id', {
         templateUrl: 'views/word.html',
@@ -38,9 +40,13 @@ angular
       })
       .when('/login', {
         templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
+        controller: 'LoginCtrl',
+        activetab: 'login'
       })
       .otherwise({
         redirectTo: '/words'
       });
+  })
+  .config(function(localStorageServiceProvider) {
+    localStorageServiceProvider.setPrefix('orongo');
   });

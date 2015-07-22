@@ -26,10 +26,16 @@
     <!-- Add your site or application content here -->
     <div class="container">
       <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#/words">Words</a></li>
-          <li><a ng-href="#/about">About</a></li>
-          <li><a ng-href="#">Contact</a></li>
+        <ul class="nav nav-pills pull-right" ng-controller="MenuCtrl">
+          <li ng-class="{active: route.current.activetab == 'words'}">
+            <a ng-href="#/words">Words</a>
+          </li>
+          <li ng-class="{active: route.current.activetab == 'login'}">
+            <a ng-hide="isUserLoggedIn()" ng-href="#/login">Login</a>
+          </li>
+          <li>
+            <a ng-show="isUserLoggedIn()" style="cursor: pointer" ng-click="logout()">Logout <span ng-bind="username()"></span></a>
+          </li>
         </ul>
         <h3 class="text-muted">orongo</h3>
       </div>
@@ -63,6 +69,7 @@
     <script src="bower_components/ngtoast/dist/ngToast.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/pouchdb-authentication/dist/pouchdb.authentication.js"></script>
+    <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -71,7 +78,9 @@
         <script src="scripts/controllers/wordsCtrl.js"></script>
         <script src="scripts/controllers/wordCtrl.js"></script>
         <script src="scripts/controllers/loginCtrl.js"></script>
+        <script src="scripts/controllers/menuCtrl.js"></script>
         <script src="scripts/services/wordsService.js"></script>
+        <script src="scripts/services/authService.js"></script>
         <!-- endbuild -->
 </body>
 </html>

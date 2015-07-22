@@ -6,7 +6,7 @@ angular.module('orongoApp')
 
     this.scheduleSync = function(url) {
       var remoteDB = pouchDB(url);
-      localDB.sync(remoteDB, {
+      return localDB.sync(remoteDB, {
         live: true,
         retry: true
       }).on('change', function (c) {
