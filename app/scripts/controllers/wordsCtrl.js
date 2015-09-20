@@ -17,8 +17,26 @@ angular.module('orongoApp')
         $scope.words = _.reject($scope.words, function(word) { return word._id === doc._id; });
 
         if (!doc._deleted) {
+          console.log('pulling word from server');
           $scope.words.push(doc);
         }
+      });
+    });
+
+    var updateWords = function() {
+      WordsService.findAll().then(function(result) {
+        console.log('words');
+        console.log(result);
+        $scope.words = result.rows.map(function(elem) { return elem.doc; });
+      }).catch(function(e) {
+        console.error(e);
+        ngToast.danger('Something\'s wrong. Try again.');
+      });
+    };
+
+    $scope.$on('source_changed', function () {
+      $scope.$apply(function () {
+        updateWords();
       });
     });
 
@@ -43,9 +61,5 @@ angular.module('orongoApp')
       return new Array(n);
     };
 
-    WordsService.findAll().then(function(result) {
-      $scope.words = result.rows.map(function(elem) { return elem.doc; });
-    }).catch(function() {
-      ngToast.danger('Something\'s wrong. Try again.');
-    });
+    updateWords();
   });

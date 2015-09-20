@@ -24,8 +24,15 @@ angular
       return r;
     };
   })
+  .run(function(WordsService, AuthService) {
+    var remote = AuthService.getRemoteDBUrl();
+    if (remote) {
+      WordsService.scheduleSync(remote);
+    }
+  })
   .constant('DBConfig', {
-    url: 'http://192.168.1.10:5984/userdb-'
+    url: 'http://192.168.1.10:5984/userdb-',
+    defaultLocalDB: 'default'
   })
   .config(function ($routeProvider) {
     $routeProvider

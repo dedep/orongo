@@ -1,21 +1,22 @@
 'use strict';
 
 angular.module('orongoApp')
-  .controller('LoginCtrl', function ($scope, pouchDB, DBConfig, WordsService, $location, AuthService, ngToast) {
+  .controller('LoginCtrl', function ($scope, pouchDB, DBConfig, WordsService, $location, AuthService, ngToast, $rootScope) {
 
     $scope.credentials = {
       user: '',
       password: ''
     };
 
+    //todo: move it to AuthService
     $scope.login = function() {
       if (!$scope.credentials.user) {
         ngToast.danger('You must provide a username.');
         return;
       }
 
-      var DbUrl =  DBConfig.url + $scope.credentials.user.hexEncode();
-      var remoteDB = pouchDB(DbUrl);
+      var dbUrl = AuthService.getRemoteDBUrl($scope.credentials.user);
+      var remoteDB = pouchDB(dbUrl);
 
       remoteDB.login($scope.credentials.user, $scope.credentials.password, function (err) {
         if (err) {
@@ -34,9 +35,10 @@ angular.module('orongoApp')
             });
           }
         } else {
-          $scope.sync = WordsService.scheduleSync(DbUrl);
           AuthService.login($scope.credentials.user);
+          $scope.sync = WordsService.scheduleSync(dbUrl);
           $location.path('/words');
+          $rootScope.$broadcast('source_changed');
         }
 
         $scope.credentials.password = '';
